@@ -155,6 +155,7 @@ async function openRealm() {
   };
   try {
     // 2. `await` and `open` the config created. 
+    // 3. return the Realm
   } catch (err) {
     console.log("failed to open realm", err.message);
     throw err.message;

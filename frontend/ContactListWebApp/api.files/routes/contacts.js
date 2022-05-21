@@ -103,6 +103,7 @@ router.delete('/', async (req, res) => {
     const config = {};
     try {
       // Open the realm with the created configuration
+      // 4. return the Realm
     } catch (err) {
       console.log("failed to open realm", err.message);
       throw err.message;
