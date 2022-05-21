@@ -1,0 +1,21 @@
+{
+    "properties": {
+        "_id": {
+            "bsonType": "objectId"
+        },
+        "_partition": {
+            "bsonType": "string"
+        },
+        "firstName": {
+            "bsonType": "string"
+        },
+        "lastName": {
+            "bsonType": "string"
+        }
+    },
+    "required": [
+        "_partition",
+        "_id"
+    ],
+    "title": "Contact"
+}
