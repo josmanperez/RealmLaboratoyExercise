@@ -1,6 +1,6 @@
 const express = require("express");
 const BSON = require("bson");
-const {User, Contact} = require('../model/model');
+const { User, Contact } = require('../model/model');
 
 var isListener = false;
 
@@ -14,7 +14,7 @@ const router = express.Router();
  * Get Contact List
  */
 router.get('/', async (req, res) => {
-  const contacts = await read().then((contacts)=>{
+  const contacts = await read().then((contacts) => {
     console.log(`Numero de contactos ${contacts.length}`);
     res.send(contacts);
   }).catch(err => {
@@ -30,7 +30,7 @@ router.post('/', async (req, res) => {
   if (!("firstName" in req.body) || !("lastName" in req.body)) {
     res.status(400).send("Missing first name or last name variables");
   } else {
-    await save(req.body).then(()=>{
+    await save(req.body).then(() => {
       socket.emit("contact", "new contact created");
       res.status(201).send();
     }).catch(err => {
@@ -42,12 +42,12 @@ router.post('/', async (req, res) => {
 
 /**
  * Update contact 
- * */ 
+ * */
 router.put('/', async (req, res) => {
   if (!("firstName" in req.body) || !("lastName" in req.body) || !("_id" in req.body)) {
     res.status(400).send("Missing firstName, lastName or id variables");
   } else {
-    await update(req.body).then(()=>{
+    await update(req.body).then(() => {
       socket.emit("contact", "contact updated");
       res.status(200).send();
     }).catch(err => {
@@ -64,7 +64,7 @@ router.delete('/', async (req, res) => {
   if (!("_id" in req.body)) {
     res.status(400).send("Missing id variable");
   } else {
-    await remove(req.body).then(() =>{
+    await remove(req.body).then(() => {
       socket.emit("contact", "contact deleted");
       res.status(204).send();
     }).catch(err => {
@@ -82,7 +82,7 @@ router.delete('/', async (req, res) => {
  * Function to open a Realm and stores it globally
  * @returns An instance of Realm (anonymous or of the user logged in)
  */
- async function openRealm() {
+async function openRealm() {
   if (app.currentUser == null) {
     throw 'User not validated';
   } else {
@@ -115,7 +115,7 @@ router.delete('/', async (req, res) => {
  * Function to read the list of Contacts for a certain user partition
  * @returns {List<Contact>} List of Contacts
  */
- async function read() {
+async function read() {
   console.log("READ");
   const realm = await openRealm();
   /**
@@ -141,7 +141,7 @@ router.delete('/', async (req, res) => {
  * @param {JSON Object with the properties of the Contact} body 
  * - TODO: Add `age` as `parseInt`: parseInt(body.age) || -1;
  */
- async function save(body) {
+async function save(body) {
   console.log("SAVE");
   const realm = await openRealm();
   const age = parseInt(body.age) || -1;
@@ -183,12 +183,12 @@ async function update(body) {
    * 3) Return the updated contact
    * https://www.mongodb.com/docs/realm/sdk/node/examples/read-and-write-data/#update-an-object
    */
-  throw 'Update is not yet implemente';
+  throw 'Update is not yet implemented';
   //const updatedContact = realm.write(() => {
-    // 1. Get the contact by using `objectForPrimaryKey` and the `id`
-    // 2. Set the firstName property of the retrieved contact to `body.firstName`
-    // 3. Set the lastName property of the retrieved contact to `body.lastName`
-    // 4. Add a control logic. If the `age` variable is other than `-1`, assign it to the age property of the previously retrieved contact.
+  // 1. Get the contact by using `objectForPrimaryKey` and the `id`
+  // 2. Set the firstName property of the retrieved contact to `body.firstName`
+  // 3. Set the lastName property of the retrieved contact to `body.lastName`
+  // 4. Add a control logic. If the `age` variable is other than `-1`, assign it to the age property of the previously retrieved contact.
   //});
   //return updatedContact;
 }
@@ -197,7 +197,7 @@ async function update(body) {
  * Function to delete a Contact
  * @param {string} body the id of the contact to be deleted 
  */
- async function remove(body) {
+async function remove(body) {
   console.log("DETELE");
   const realm = await openRealm();
   let id = new BSON.ObjectID(body._id);
@@ -218,17 +218,17 @@ async function update(body) {
 /**
  * Function to clear the listener when the user logout
  */
-var clearListener = async function() {
+var clearListener = async function () {
   console.log('clear listener');
   try {
     const realm = await openRealm();
     const contacts = realm.objects("Contact").sorted("firstName");
     contacts.removeListener(listener);
-    isListener = false; 
+    isListener = false;
   } catch (error) {
     console.log(error.message)
   }
-} 
+}
 
 /**
  * The listener for changes
