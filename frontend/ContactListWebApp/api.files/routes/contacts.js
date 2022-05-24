@@ -159,7 +159,7 @@ router.delete('/', async (req, res) => {
     //    b. The property `_partition` as we follow a private partition strategy should be the id of the logged user
     //    c. The property `fistName` should be `body.firstName`
     //    d. The property `lastName` should be `body.lastName`
-    //    e. The `age` property must be the age only if the `age` variable is not `null`, otherwise it must be `null`.
+    //    e. The `age` property must be the age only if the `age` variable is not `-1`, otherwise it must be `null`.
     // 2. Add the new Contact objet in a `realm.create` transaction for the "Contact" schema.
   });
 };
