@@ -126,6 +126,7 @@ router.delete('/', async (req, res) => {
    * 3) Return the objects
    * https://www.mongodb.com/docs/realm/sdk/node/examples/read-and-write-data/#filter-queries
    * https://www.mongodb.com/docs/realm/sdk/node/examples/read-and-write-data/#sort-query-results
+   * https://www.mongodb.com/docs/realm/sdk/node/examples/react-to-changes/#register-a-realm-change-listener
    */
   return [];
   // 1. Read the schema `Contact` from the `realm.objects` and sorted them by `firstName`
