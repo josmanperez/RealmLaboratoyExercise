@@ -9,8 +9,7 @@ const Contact = {
     _partition: 'string',
     firstName: 'string?',
     lastName: 'string?',
-    // TODO: Add `age` as optional `int`
-    //age: 'int?'
+    age: 'int?'
   },
   primaryKey: '_id',
 };

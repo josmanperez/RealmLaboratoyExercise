@@ -236,7 +236,7 @@ function showContactTable() {
       { data: 'firstName' },
       { data: 'lastName' },
       // TODO: - Add data 'age' for reading age property
-      // { data: 'age' }
+      { data: 'age' }
     ]
   });
   addTableListener(table);

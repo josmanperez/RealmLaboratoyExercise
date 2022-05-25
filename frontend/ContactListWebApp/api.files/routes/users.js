@@ -103,10 +103,8 @@ router.post("/logout", async (req, res) => {
  * @param {String} password 
  */
 async function registerUser(email, password) {
-  throw new Error('RegisterUser not yet implemented');
   try {
-    // 1. Call `emailPasswordAuth.registerUser` with the parameters email/password. Be aware that this methods need 
-    // to `await` because it is an asynchronous operation
+    await app.emailPasswordAuth.registerUser(email, password)
   } catch (err) {
     throw err;
   }
@@ -127,14 +125,14 @@ async function emailSignIn(body) {
    * 3) Return the user if success 
    * https://www.mongodb.com/docs/realm/sdk/node/examples/authenticate-users/#email-password-user
    */
-  throw new Error('LogIn not implemented');
-  // 1. Create a Credentials object with `emailPassword`
+  const credentials = Realm.Credentials.emailPassword(body.email, body.pass);
   try {
-    // 2. Use the `logIn` method with the previous credentials object created and assign it to a user
-    // 3. Return the user
+    const user = await app.logIn(credentials);
+    return user;
   } catch (err) {
     throw err
   }
+
 }
 
 /**
@@ -145,16 +143,15 @@ async function emailSignIn(body) {
  */
 async function openRealm() {
   console.log(`open a Realm for user with partition: ${app.currentUser.id}`);
-  throw new Error('Open Realm not implemented');
-  // 1. Create a config object
   const config = {
-  // 1. The schema is going to be `Contacts` and `User`
-  // 2. For the sync property:
-  //    1. The user is the current user 
-  //    2. The partition value is the `id` of the `currentUser`
+    schema: [Contact, User],
+    sync: {
+      user: app.currentUser,
+      partitionValue: app.currentUser.id,
+    },
   };
   try {
-    // 2. `await` and `open` the config created. 
+    return await Realm.open(config);
   } catch (err) {
     console.log("failed to open realm", err.message);
     throw err.message;

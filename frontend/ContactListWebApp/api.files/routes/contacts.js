@@ -99,10 +99,15 @@ router.delete('/', async (req, res) => {
     // Create a config object for the Schema `Contact` and `User`
     // We are going to use the logged user
     // And the partition value would be the `id` of the user which can be accessed through `app.currentUser.id` 
-    throw new Error('Open Realm not implemented');
-    const config = {};
+    const config = {
+      schema: [Contact, User],
+      sync: {
+        user: app.currentUser,
+        partitionValue: app.currentUser.id,
+      },
+    };
     try {
-      // Open the realm with the created configuration
+      return await Realm.open(config);
     } catch (err) {
       console.log("failed to open realm", err.message);
       throw err.message;
@@ -125,13 +130,14 @@ router.delete('/', async (req, res) => {
    * 3) Return the objects
    * https://www.mongodb.com/docs/realm/sdk/node/examples/read-and-write-data/#filter-queries
    * https://www.mongodb.com/docs/realm/sdk/node/examples/read-and-write-data/#sort-query-results
+   * https://www.mongodb.com/docs/realm/sdk/node/examples/react-to-changes/#register-a-realm-change-listener
    */
-  return [];
-  // 1. Read the schema `Contact` from the `realm.objects` and sorted them by `firstName`
-  // 2. If there is no listener 
-  //    a. Add the listener `listener` to the contacts object
-  //    b. Assign `true` to the `isListener` variable
-  // 3. Return contacts.
+  const contacts = realm.objects('Contact').sorted('firstName');
+  if (!isListener) {
+    contacts.addListener(listener)
+    isListener = true;
+  }
+  return contacts;
 };
 
 /**
@@ -150,15 +156,14 @@ router.delete('/', async (req, res) => {
    * 2) Add the properties of the new object inside the create
    * https://www.mongodb.com/docs/realm/sdk/node/examples/read-and-write-data/#create-a-new-object
    */
-  throw 'Add contact not yet implemented';
   realm.write(() => {
-    // 1. Create a new Contact object
-    //    a. The property `_id` should be a `new BSON.ObjectID()`
-    //    b. The property `_partition` as we follow a private partition strategy should be the id of the logged user
-    //    c. The property `fistName` should be `body.firstName`
-    //    d. The property `lastName` should be `body.lastName`
-    //    e. The `age` property must be the age only if the `age` variable is not `null`, otherwise it must be `null`.
-    // 2. Add the new Contact objet in a `realm.create` transaction for the "Contact" schema.
+    realm.create('Contact',{
+      _id: new BSON.ObjectID(),
+      _partition: app.currentUser.id,
+      firstName: body.firstName,
+      lastName: body.lastName,
+      age: (age != -1) ? age : null
+    });
   });
 };
 
@@ -181,14 +186,15 @@ async function update(body) {
    * 3) Return the updated contact
    * https://www.mongodb.com/docs/realm/sdk/node/examples/read-and-write-data/#update-an-object
    */
-  throw 'Update is not yet implemente';
-  //const updatedContact = realm.write(() => {
-    // 1. Get the contact by using `objectForPrimaryKey` and the `id`
-    // 2. Set the firstName property of the retrieved contact to `body.firstName`
-    // 3. Set the lastName property of the retrieved contact to `body.lastName`
-    // 4. Add a control logic. If the `age` variable is other than `-1`, assign it to the age property of the previously retrieved contact.
-  //});
-  //return updatedContact;
+  const updatedContact = realm.write(() => {
+    const contact = realm.objectForPrimaryKey('Contact',id)
+    contact.firstName = body.firstName
+    contact.lastName = body.lastName
+    if (age != -1) {
+      contact.age = age
+    }
+  });
+  return updatedContact;
 }
 
 /**
@@ -206,10 +212,9 @@ async function update(body) {
    * 2) Delete the contact object in a `write` transaction
    * https://www.mongodb.com/docs/realm/sdk/node/examples/read-and-write-data/#delete-an-object
    */
-  throw 'Delete is not yet implemented';
   realm.write(() => {
-    // 1. Get the contact
-    // 2. Delete the contact
+    const contact = realm.objectForPrimaryKey('Contact',id)
+    realm.delete(contact)
   });
 }
 
