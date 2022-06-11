@@ -9,7 +9,7 @@ const Contact = {
     _partition: 'string',
     firstName: 'string?',
     lastName: 'string?',
-    age: 'int?'
+    age: 'string?'
   },
   primaryKey: '_id',
 };
