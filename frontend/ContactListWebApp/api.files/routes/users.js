@@ -108,7 +108,7 @@ async function registerUser(email, password) {
     // 1. Call `emailPasswordAuth.registerUser` with the parameters email/password. Be aware that this methods need 
     // to `await` because it is an asynchronous operation
   } catch (err) {
-    throw err;
+    throw err.message;
   }
 }
 
@@ -133,7 +133,7 @@ async function emailSignIn(body) {
     // 2. Use the `logIn` method with the previous credentials object created and assign it to a user
     // 3. Return the user
   } catch (err) {
-    throw err
+    throw err.message
   }
 }
 
