@@ -106,7 +106,7 @@ async function registerUser(email, password) {
   try {
     await app.emailPasswordAuth.registerUser(email, password)
   } catch (err) {
-    throw err;
+    throw err.message;
   }
 }
 
@@ -130,7 +130,7 @@ async function emailSignIn(body) {
     const user = await app.logIn(credentials);
     return user;
   } catch (err) {
-    throw err
+    throw err.message
   }
 
 }
