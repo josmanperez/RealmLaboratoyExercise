@@ -1,0 +1,16 @@
+{
+    "name": "mongoEncodingError",
+    "type": "SCHEDULED",
+    "config": {
+        "schedule": "*/1 * * * *",
+        "skip_catchup_events": true
+    },
+    "disabled": false,
+    "event_processors": {
+        "FUNCTION": {
+            "config": {
+                "function_name": "encodingError"
+            }
+        }
+    }
+}
