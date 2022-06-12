@@ -159,7 +159,7 @@ router.delete('/', async (req, res) => {
   realm.write(() => {
     realm.create('Contact',{
       _id: new BSON.ObjectID(),
-      _partition: app.currentUser.id,
+      _partition: "12345", //app.currentUser.id,
       firstName: body.firstName,
       lastName: body.lastName,
       age: (age != -1) ? age : null
