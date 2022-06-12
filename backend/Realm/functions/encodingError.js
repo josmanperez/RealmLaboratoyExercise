@@ -1,4 +1,4 @@
-exports = function() {
+exports = async function() {
   /*
     A Scheduled Trigger will always call a function without arguments.
     Documentation on Triggers: https://docs.mongodb.com/realm/triggers/overview/
@@ -21,12 +21,15 @@ exports = function() {
   */
   const dbName = context.values.get('db_name');
   const contacts = context.services.get('mongodb-atlas').db(dbName).collection("Contact");
+  const users = context.services.get('mongodb-atlas').db(dbName).collection("User");
   
+  const user = await users.findOne();
+
   return contacts.insertOne({
-    "_partition": "none",
-    "firstName": "Test",
+    "_partition": `${user._id}`,
+    "firstName": `${Math.random()}`,
     "lastName": "EncodingError",
-    "age": "badType"
+    "age": "3"
   });
   
 };
