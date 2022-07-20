@@ -24,8 +24,12 @@ router.get("/connected", async (req, res) => {
       console.log(`user ${user.name} is connected`);
       res.status(200).send(user);
     }).catch(err => {
-      console.log(`Error opening the realm ${err.message}`);
-      res.status(503).send(err.message);
+      console.log(`Error opening the realm ${err}`);
+      if (err.message === undefined) {
+        res.status(503).send(err);
+      } else {
+        res.status(503).send(err.message);
+      }
     });
   }
 });
